@@ -1,9 +1,6 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace BlacksmithTools
@@ -20,7 +17,7 @@ namespace BlacksmithTools
             if (__result == null) return;
             if (__result.name.StartsWith("attach_skin") && ObjectDB.instance.GetItemPrefab(itemHash) != null)
             {
-                BoneReorder.SetSMRBones(__instance, __result, itemHash);
+                SetSMRBones(__instance, __result, itemHash);
             }
         }
 
@@ -33,22 +30,30 @@ namespace BlacksmithTools
             foreach (GameObject result in __result)
             {
                 if (!result.name.StartsWith("attach_skin")) continue;
-                BoneReorder.SetSMRBones(__instance, result, itemHash);
+                SetSMRBones(__instance, result, itemHash);
             }
         }
 
         public static void SetSMRBones(VisEquipment ve, GameObject instance, int hash)
         {
-            Util.LogMessage("Reordering bones");
+            Util.LogMessage("Trying to reorder bones...");
+
+            if (ve == null || ve.m_bodyModel == null || ve.m_bodyModel.rootBone == null) return;
 
             try
             {
                 SkinnedMeshRenderer origsmr = instance.GetComponentInChildren<SkinnedMeshRenderer>();
                 SkinnedMeshRenderer[] smrs = instance.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+
+                if (origsmr == null) return;
+
                 foreach (SkinnedMeshRenderer smr in smrs)
                 {
+                    if (smr == null) continue;
                     SetBones(smr, GetBoneNames(origsmr), ve.m_bodyModel.rootBone);
                 }
+
+                Util.LogMessage("Success!");
             }
             catch(Exception e)
             {
@@ -70,10 +75,13 @@ namespace BlacksmithTools
 
         public static void SetBones(SkinnedMeshRenderer smr, string[] boneNames, Transform skeletonRoot)
         {
+            if (smr.bones.Length != boneNames.Length) return;
+
             Transform[] bones = new Transform[smr.bones.Length];
             for (int j = 0; j < bones.Length; j++)
             {
                 bones[j] = Util.FindInChildren(skeletonRoot, boneNames[j]);
+                if (bones[j] == null) return;
             }
 
             smr.bones = bones;

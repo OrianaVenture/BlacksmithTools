@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BlacksmithTools
@@ -25,14 +21,14 @@ namespace BlacksmithTools
 
         public void UpdateBodyModel()
         {
-            if(BodypartSystem.bodypartSettingsAsBones.Keys.Count != BodypartSystem.bodypartSettings.Keys.Count)
+            if (BodypartSystem.bodypartSettingsAsBones.Keys.Count != BodypartSystem.bodypartSettings.Keys.Count)
             {
                 BodypartSystem.PartCfgToBoneindexes();
                 BodypartSystem.CleanupCfgs();
             }
 
             List<int> boneIndexes = new List<int>();
-            
+
             foreach (int hash in Util.GetEquippedHashes(viseq))
             {
                 foreach (string itemName in BodypartSystem.bodypartSettingsAsBones.Keys)
@@ -44,12 +40,15 @@ namespace BlacksmithTools
                     }
                 }
             }
+
             Util.LogMessage("Hiding " + boneIndexes.Count.ToString() + " bones");
+
             if (boneIndexes.Count == 0)
             {
                 viseq.m_models[viseq.GetModelIndex()].m_mesh = originalModels[viseq.GetModelIndex()].m_mesh;
                 return;
             }
+
             Mesh freshBody = originalModels[viseq.GetModelIndex()].m_mesh;
             Mesh amputatedBody = Amputate(UnityEngine.Object.Instantiate(freshBody), boneIndexes.ToArray());
             amputatedBody.name = freshBody.name;
@@ -69,6 +68,7 @@ namespace BlacksmithTools
                 tris = new List<int>( body.GetTriangles(subM) );
                 bool toHide;
                 int tri = 0;
+
                 while (tri < tris.Count)
                 {
                     toHide = false;
@@ -141,9 +141,7 @@ namespace BlacksmithTools
         public void Setup(VisEquipment _viseq)
         {
             viseq = _viseq;
-
             SaveOriginalModels();
-
             UpdateBodyModel();
 
             Util.LogMessage("bodypart controller attached to " + viseq.name, BepInEx.Logging.LogLevel.Message);

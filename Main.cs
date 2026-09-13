@@ -3,13 +3,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
-using UnityEngine.Events;
-using System.Collections;
-using System;
-using System.Collections.Generic;
 using BepInEx.Configuration;
-using UnityEngine.SceneManagement;
 
 namespace BlacksmithTools
 {
@@ -22,7 +16,7 @@ namespace BlacksmithTools
             MODNAME = "BlacksmithTools",
             AUTHOR = "GoldenJude",
             GUID = AUTHOR + "_" + MODNAME,
-            VERSION = "2.0.1";
+            VERSION = "3.0.0";
 
         public static ManualLogSource log;
         public static Harmony harmony;

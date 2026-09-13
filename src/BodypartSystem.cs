@@ -1,14 +1,9 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace BlacksmithTools
 {
@@ -81,7 +76,8 @@ namespace BlacksmithTools
 
                     //load part name list
                     ConfigFile cfg = new ConfigFile(file, true);
-                    ConfigEntry<string> partList = cfg.Bind("Body Parts", "List", "", "List of body parts to hide, delimited by a semilocor. List of valid values on mod page");
+                    ConfigEntry<string> partList = cfg.Bind("Body Parts", "List", "", 
+                        "List of body parts to hide, delimited by a semilocor. List of valid values on mod page");
 
                     //convert bodypart list to bone index array
                     string[] splitPartNames = partList.Value.Split(';');
@@ -91,9 +87,12 @@ namespace BlacksmithTools
                     }
 
                     //parse bone index list to array
-                    ConfigEntry<string> boneIndexList = cfg.Bind("Body Parts", "Bone List", "", "List of bone indexes, body model geometry weighted to these bones will be hidden, delimited by a semilocor. List of valid values on mod page");
+                    ConfigEntry<string> boneIndexList = cfg.Bind("Body Parts", "Bone List", "", 
+                        "List of bone indexes, body model geometry weighted to these bones will be hidden, " +
+                        "delimited by a semilocor. List of valid values on mod page");
                     string[] explodedBoneIndexCfg = boneIndexList.Value.Split(';');
                     int boneIndex;
+
                     for (int i = 0; i < explodedBoneIndexCfg.Length; i++)
                     {
                         if (int.TryParse(explodedBoneIndexCfg[i], out boneIndex)) bodypartSettingsAsBones[itemName].Add(boneIndex);
@@ -102,6 +101,7 @@ namespace BlacksmithTools
                     Util.LogMessage(bodypartSettingsAsBones[itemName].Count + " bones for " + itemName, BepInEx.Logging.LogLevel.Message);
                 }
             }
+
             PartCfgToBoneindexes();
             CleanupCfgs();
         }
@@ -111,10 +111,11 @@ namespace BlacksmithTools
         {
             foreach (string itemName in bodypartSettings.Keys)
             {
-                if(!bodypartSettingsAsBones.ContainsKey(itemName))
+                if (!bodypartSettingsAsBones.ContainsKey(itemName))
                 {
                     bodypartSettingsAsBones.Add(itemName, new List<int>());
                 }
+
                 bodypartSettingsAsBones[itemName].AddRange(Util.BodyPartToBoneIndexes(bodypartSettings[itemName].ToArray()));
             }
         }
@@ -185,6 +186,14 @@ namespace BlacksmithTools
         {
             if (__result) EquipmentChanged(__instance);
         }
+
+        [HarmonyPatch(typeof(VisEquipment), nameof(VisEquipment.SetTrinketEquipped))]
+        [HarmonyPostfix]
+        static void SetTrinketPatch(VisEquipment __instance, bool __result)
+        {
+            if (__result) EquipmentChanged(__instance);
+        }
+
         #endregion
     }
 }

@@ -1,6 +1,6 @@
-## Notes
-In case of questions you may find me on the [Modding discord server](https://discord.gg/MXqWrn532w)  
-You can also file an issue on [GitHub](https://github.com/GoldenJude/BlacksmithTools/issues)  
+# Blacksmiths Tools
+
+This mod is brought to you by GoldenJude, now maintained with the help of VentureValheim. Please direct all comments and issues to OrianaVenture on discord or at [Venture Gaming](https://discord.gg/tAd5hapt88). To make a report on github please do so under the specified project fork.
 
 ## Features
 
@@ -11,7 +11,7 @@ You can also file an issue on [GitHub](https://github.com/GoldenJude/BlacksmithT
 - provides the ability to hide certain parts of the player model for easier armor creation
 
 ## Installation
-Place the BlacksmithTools.dll into your Bepinex/plugins folder.
+Place the BlacksmithTools.dll into your Bepinex/plugins folder. This mod is only needed on the client.
 
 ## Configuration
 
@@ -27,7 +27,8 @@ Create a file named bsmith.ITEM_PREFAB_NAME.cfg and launch once to generate fiel
 Access the BlacksmithTools.BodypartSystem class and insert your configuration into either of the two dictionaries with the key being the item's prefab name
 
 #### Valid values for configuration via part names
-    
+
+```
     Head
     Torso
     ArmUpperLeft
@@ -42,9 +43,11 @@ Access the BlacksmithTools.BodypartSystem class and insert your configuration in
     LegUpperRight
     LegLowerRight
     FootRight
+```
 
 #### Values for configuration via bone indexes (list gained by printing out player model's bones array)
 
+```
     Hips - 0
     Spine - 1
     Spine1 - 2
@@ -98,16 +101,4 @@ Access the BlacksmithTools.BodypartSystem class and insert your configuration in
     RightLeg - 50
     RightFoot - 51
     RightToeBase - 52
-
-## Changelog  
-- **2.0.3**  
-fixed patch method names, thanks Azumatt  
-merged optimization from MSchmoecker  
-- **2.0.2**  
-armor stand update - hiding does not apply to unreadable body models anymore  
-added .cfg extension and made explanation of config files a bit clearer  
-- **2.0.1**  
-Error when equipping armors with disabled skinned mesh renderers (plate armor) should be fixed   
-- **2.0.0**  
-Added configuration to disable features separately  
-Changed body hiding to alter the body mesh directly without having to supply my own mesh
+```
